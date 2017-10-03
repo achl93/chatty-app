@@ -45,6 +45,8 @@ class App extends Component {
       // Calling setState will trigger a call to render() in App and all child components.
       this.setState({messages: messages})
     }, 3000);
+    this.wsConnection = new WebSocket('ws://localhost:3001');
+    console.log("Connected to server");
   }
 
   render() {
