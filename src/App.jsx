@@ -6,32 +6,31 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      currentUser: {name: 'Bob'}, // optional. if currentUser is not defined, it means the user is Anonymous
-      messages: [
-        {
-          id: 1,
-          username: 'Bob',
-          content: 'Has anyone seen my marbles?',
-        },
-        {
-          id: 2,
-          username: 'Anonymous',
-          content: 'No, I think you lost them. You lost your marbles Bob. You lost them for good.'
-        }
-      ]
+      // currentUser: {name: ''}, // optional. if currentUser is not defined, it means the user is Anonymous
+      messages: [],
+      userSize: 0
     }
     this.onSendMessage = this.onSendMessage.bind(this);
+    this.onChangeName = this.onChangeName.bind(this);
   }
 
   onSendMessage(content) {
     const msg = {
-      id: Math.random() * 99 + 1,
-      username: this.state.currentUser.name,
+      username: (this.state.currentUser) ? this.state.currentUser.name : 'Anonymous',
       content: content
     }
-    this.setState({
-      messages: this.state.messages.concat(msg)
-    })
+    this.wsConnection.send(JSON.stringify(msg));
+  }
+
+  onChangeName(content) {
+    const nameData = {
+      currName: (this.state.currentUser) ? this.state.currentUser.name : 'Anonymous',
+      newName: content,
+      type: 'postNotification',
+      username: 'Server'
+    }
+    this.setState({ currentUser: { name: content } });
+    this.wsConnection.send(JSON.stringify(nameData));
   }
 
   componentDidMount() {
@@ -39,20 +38,57 @@ class App extends Component {
     setTimeout(() => {
       console.log("Simulating incoming message");
       // Add a new message to the list of messages in the data store
-      const newMessage = {id: 3, username: "Michelle", content: "Hello there!"};
+      const newMessage = {id: 1, username: "Michelle", content: "Hello there!", type: "incomingMessage"};
       const messages = this.state.messages.concat(newMessage)
       // Update the state of the app component.
       // Calling setState will trigger a call to render() in App and all child components.
       this.setState({messages: messages})
     }, 3000);
+
     this.wsConnection = new WebSocket('ws://localhost:3001');
-    console.log("Connected to server");
+
+    this.wsConnection.onopen = (event) => {
+      console.log("Connected to websocket server");
+      // console.log(event.data);
+    };
+
+    this.wsConnection.onclose = () => {
+      this.setState({
+        userSize: this.state.userSize - 1
+      })
+    }
+
+    this.wsConnection.onmessage = (event) => {
+      console.log("Message received from server");
+      const eventData = JSON.parse(event.data);
+      if (typeof eventData === typeof 1 && !eventData.type) {
+        // console.log('is a number!');
+        this.setState({
+          userSize: eventData
+        })
+      }
+      if (eventData.type === 'incomingMessage') {
+        this.setState({
+          messages: this.state.messages.concat(eventData)
+        })
+      } else if (eventData.type === 'postNotification') {
+        // console.log(eventData);
+        this.setState({
+          messages: this.state.messages.concat(eventData)
+        })
+        // console.log(this.state.messages);
+      }
+    }
   }
 
   render() {
     return (
       <div>
-        <ChatBar onSendMessage={ this.onSendMessage } currentUser={ this.state.currentUser.name }/>
+        <nav className="navbar">
+          <a href="/" className="navbar-brand">Chatty</a>
+          <div id='connectedCount'>Clients connected: { this.state.userSize }</div>
+        </nav>
+        <ChatBar onSendMessage={ this.onSendMessage } onChangeName={ this.onChangeName } currentUser={ (this.state.currentUser) ? this.state.currentUser.name : 'Anonymous' }/>
         <MessageList messages={ this.state.messages }/>
       </div>
     );

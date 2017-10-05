@@ -45,10 +45,40 @@ body {
 .message {
   display: flex;
   padding: 5px;
-  .system {
-    font-style: italic;
-    padding: 5px 20px;
-  }
+}
+
+.server-message {
+  display: flex;
+  padding: 5px;
+  font-style: italic;
+}
+
+.server-name,
+.server-content {
+  overflow: hidden;
+  margin: 5px;
+  padding: 0 10px;
+}
+
+#connectedCount {
+  color: inherit;
+  display: block;
+  float: right;
+  height: 60px;
+  line-height: 60px;
+  padding: 0 10px;
+  text-decoration: none;
+}
+
+.server-content {
+  flex: 8;
+  color: grey;
+}
+
+.server-name {
+  flex: 2;
+  font-weight: 700;
+  color: grey;
 }
 
 .message-content,
