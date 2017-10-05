@@ -8,7 +8,7 @@ class App extends Component {
     this.state = {
       // currentUser: {name: ''}, // optional. if currentUser is not defined, it means the user is Anonymous
       messages: [],
-      userSize: 0
+      userSize: 0,
     }
     this.onSendMessage = this.onSendMessage.bind(this);
     this.onChangeName = this.onChangeName.bind(this);
@@ -16,7 +16,7 @@ class App extends Component {
 
   onSendMessage(content) {
     const msg = {
-      username: (this.state.currentUser) ? this.state.currentUser.name : 'Anonymous',
+      username: this.state.currentUser ? this.state.currentUser.name : 'Anonymous',
       content: content
     }
     this.wsConnection.send(JSON.stringify(msg));
@@ -24,12 +24,11 @@ class App extends Component {
 
   onChangeName(content) {
     const nameData = {
-      currName: (this.state.currentUser) ? this.state.currentUser.name : 'Anonymous',
+      currName: this.state.currentUser ? this.state.currentUser.name : 'Anonymous',
       newName: content,
       type: 'postNotification',
       username: 'Server'
     }
-    this.setState({ currentUser: { name: content } });
     this.wsConnection.send(JSON.stringify(nameData));
   }
 
@@ -88,7 +87,7 @@ class App extends Component {
           <a href="/" className="navbar-brand">Chatty</a>
           <div id='connectedCount'>Clients connected: { this.state.userSize }</div>
         </nav>
-        <ChatBar onSendMessage={ this.onSendMessage } onChangeName={ this.onChangeName } currentUser={ (this.state.currentUser) ? this.state.currentUser.name : 'Anonymous' }/>
+        <ChatBar onSendMessage={ this.onSendMessage } onChangeName={ this.onChangeName } currentUser={ this.state.currentUser ? this.state.currentUser.name : 'Anonymous' }/>
         <MessageList messages={ this.state.messages }/>
       </div>
     );
