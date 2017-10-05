@@ -38,7 +38,7 @@ class App extends Component {
     setTimeout(() => {
       console.log("Simulating incoming message");
       // Add a new message to the list of messages in the data store
-      const newMessage = {id: 1, username: "Michelle", content: "Hello there!", type: "incomingMessage"};
+      const newMessage = {id: 1, username: "Michelle", content: "Hello there!", type: "incomingMessage", color: 1};
       const messages = this.state.messages.concat(newMessage)
       // Update the state of the app component.
       // Calling setState will trigger a call to render() in App and all child components.
@@ -49,7 +49,6 @@ class App extends Component {
 
     this.wsConnection.onopen = (event) => {
       console.log("Connected to websocket server");
-      // console.log(event.data);
     };
 
     this.wsConnection.onclose = () => {
@@ -62,15 +61,15 @@ class App extends Component {
       console.log("Message received from server");
       const eventData = JSON.parse(event.data);
       if (typeof eventData === typeof 1 && !eventData.type) {
-        // console.log('is a number!');
         this.setState({
           userSize: eventData
         })
       }
       if (eventData.type === 'incomingMessage') {
         this.setState({
-          messages: this.state.messages.concat(eventData)
+          messages: this.state.messages.concat(eventData),
         })
+        console.log(this.state.messages);
       } else if (eventData.type === 'postNotification') {
         // console.log(eventData);
         this.setState({

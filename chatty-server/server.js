@@ -43,7 +43,7 @@ function broadcastClientSize(size) {
   }
 }
 
-function handleMessage(data) {
+function handleMessage(data, random) {
   let jsonified = JSON.parse(data);
   if (jsonified.type === 'postNotification') {
     jsonified.id = uuidv1();
@@ -52,7 +52,7 @@ function handleMessage(data) {
   } else {
     jsonified.id = uuidv1();
     jsonified.type = 'incomingMessage';
-    // console.log(jsonified);
+    jsonified.color = random;
     broadcast(jsonified);
   }
 }
@@ -61,7 +61,10 @@ function handleConnection(client) {
   console.log('Client connected');
   console.log('We are at ' + wss.clients.size + ' clients!');
   broadcastClientSize(wss.clients.size);
-  client.on('message', handleMessage);
+  const random = Math.floor(Math.random() * 4) + 1;
+  client.on('message', (data) => {
+    handleMessage(data, random);
+  })
   client.on('close', () => {
     console.log('Client disconnected');
     broadcastClientSize(wss.clients.size);
@@ -69,8 +72,3 @@ function handleConnection(client) {
 }
 
 wss.on('connection', handleConnection);
-
-// Set up a callback for when a client closes the socket. This usually means they closed their browser.
-// wss.on('close', () => {
-//   console.log('Client disconnected');
-// });
