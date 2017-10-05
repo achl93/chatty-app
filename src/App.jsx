@@ -8,7 +8,7 @@ class App extends Component {
     this.state = {
       // currentUser: {name: ''}, // optional. if currentUser is not defined, it means the user is Anonymous
       messages: [],
-      userSize: 0,
+      userSize: 0
     }
     this.onSendMessage = this.onSendMessage.bind(this);
     this.onChangeName = this.onChangeName.bind(this);
@@ -29,6 +29,7 @@ class App extends Component {
       type: 'postNotification',
       username: 'Server'
     }
+    this.setState({ currentUser: { name: content } });
     this.wsConnection.send(JSON.stringify(nameData));
   }
 
