@@ -21,7 +21,6 @@ const wss = new SocketServer({ server });
 // When a client connects they are assigned a socket, represented by
 // the ws parameter in the callback.
 function broadcast(data) {
-  // console.log(data);
   for (client of wss.clients) {
     if (client.readyState === WebSocket.OPEN) {
       if (data.type === 'incomingMessage') {
@@ -43,6 +42,7 @@ function broadcastClientSize(size) {
   }
 }
 
+// Handles message connection
 function handleMessage(data, random) {
   let jsonified = JSON.parse(data);
   if (jsonified.type === 'postNotification') {
@@ -57,6 +57,7 @@ function handleMessage(data, random) {
   }
 }
 
+// Function to handle all connections
 function handleConnection(client) {
   console.log('Client connected');
   console.log('We are at ' + wss.clients.size + ' clients!');

@@ -5,10 +5,9 @@ A Slack like messaging application
 
 ### Usage
 
-Clone the boilerplate and create your own git repo.
+Clone this repository
 
 ```
-clone this repository
 npm i
 npm start
 open http://localhost:3000

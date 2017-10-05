@@ -14,6 +14,7 @@ class App extends Component {
     this.onChangeName = this.onChangeName.bind(this);
   }
 
+  // When the user sends a message through the UI
   onSendMessage(content) {
     const msg = {
       username: this.state.currentUser ? this.state.currentUser.name : 'Anonymous',
@@ -22,6 +23,7 @@ class App extends Component {
     this.wsConnection.send(JSON.stringify(msg));
   }
 
+  // When the changes name through the UI
   onChangeName(content) {
     const nameData = {
       currName: this.state.currentUser ? this.state.currentUser.name : 'Anonymous',
@@ -33,6 +35,7 @@ class App extends Component {
     this.wsConnection.send(JSON.stringify(nameData));
   }
 
+  // After React components mounted
   componentDidMount() {
     console.log("componentDidMount <App />");
     setTimeout(() => {
@@ -45,6 +48,7 @@ class App extends Component {
       this.setState({messages: messages})
     }, 3000);
 
+    // Websocket connection
     this.wsConnection = new WebSocket('ws://localhost:3001');
 
     this.wsConnection.onopen = (event) => {
@@ -57,6 +61,7 @@ class App extends Component {
       })
     }
 
+    // When the client recieves broadcast from server
     this.wsConnection.onmessage = (event) => {
       console.log("Message received from server");
       const eventData = JSON.parse(event.data);
