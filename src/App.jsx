@@ -6,7 +6,7 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      // currentUser: {name: ''}, // optional. if currentUser is not defined, it means the user is Anonymous
+      // currentUser - undefined by default
       messages: [],
       userSize: 0
     }
@@ -76,11 +76,9 @@ class App extends Component {
         })
         console.log(this.state.messages);
       } else if (eventData.type === 'postNotification') {
-        // console.log(eventData);
         this.setState({
           messages: this.state.messages.concat(eventData)
         })
-        // console.log(this.state.messages);
       }
     }
   }

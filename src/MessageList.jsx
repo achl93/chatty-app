@@ -3,7 +3,7 @@ import Message from './Message.jsx';
 
 class MessageList extends Component {  
   render() {
-
+    // Color assigner when user connects
     const colorArr = ['null', 'black', 'blue', 'hotpink', 'yellow'];
     const message = this.props.messages.map(msg => {
       if (msg.type === 'incomingMessage') {
