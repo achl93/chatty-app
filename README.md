@@ -14,6 +14,9 @@ open http://localhost:3000
 
 ```
 
+## Screenshots
+![Main](https://github.com/achl93/chatty-app/blob/master/screenshots/1.png "Main")
+
 ### Static Files
 
 You can store static files like images, fonts, etc in the `build` folder.
